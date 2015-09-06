@@ -142,6 +142,14 @@ NAN_MODULE_INIT(FFI::InitializeBindings) {
   ftmap->Set(Nan::New<String>("pointer").ToLocalChecked(), WrapPointer((char *)&ffi_type_pointer));
   // NOTE: "long" and "ulong" get handled in JS-land
   // Let libffi handle "long long"
+#ifdef _WIN32
+    ftmap->Set(Nan::New<String>("BOOL").ToLocalChecked(), WrapPointer((char *)&ffi_type_sint32));
+  #ifdef WIN64
+    ftmap->Set(Nan::New<String>("HANDLE").ToLocalChecked(), WrapPointer((char *)&ffi_type_uint64));
+  #else
+    ftmap->Set(Nan::New<String>("HANDLE").ToLocalChecked(), WrapPointer((char *)&ffi_type_uint32));
+  #endif
+#endif
   ftmap->Set(Nan::New<String>("ulonglong").ToLocalChecked(), WrapPointer((char *)&ffi_type_ulong));
   ftmap->Set(Nan::New<String>("longlong").ToLocalChecked(), WrapPointer((char *)&ffi_type_slong));
 
